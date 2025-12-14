@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>shh</title>
+
+<style>
+
+
+
+/* ================== BASE ================== */
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:radial-gradient(circle at top,#2a0f2e,#0b0612 70%);
+  font-family:Georgia,serif;
+  overflow:hidden;
+  color:#f2c6ff;
+}
+
+/* ================== NIEBLA ================== */
+.niebla{
+  position:fixed;
+  bottom:-20%;
+  left:-50%;
+  width:200%;
+  height:60%;
+  background:
+    radial-gradient(circle at 20% 60%, rgba(120,80,160,0.18), transparent 60%),
+    radial-gradient(circle at 60% 40%, rgba(90,60,140,0.15), transparent 65%),
+    radial-gradient(circle at 80% 70%, rgba(160,110,200,0.12), transparent 70%);
+  filter:blur(60px);
+  animation:niebla 40s linear infinite;
+  z-index:0;
+}
+
+@keyframes niebla{
+  0%{transform:translateX(0);}
+  50%{transform:translateX(15%);}
+  100%{transform:translateX(0);}
+}
+
+/* ================== GLOW ================== */
+.glow{
+  position:absolute;
+  width:420px;
+  height:300px;
+  background:radial-gradient(circle,rgba(180,90,255,.25),transparent 70%);
+  filter:blur(40px);
+  z-index:1;
+}
+
+/* ================== CARTA ================== */
+.carta{
+  position:relative;
+  width:240px;
+  height:160px;
+  cursor:pointer;
+  z-index:3;
+  transition:transform .6s ease;
+}
+
+.carta:hover{
+  transform:scale(1.04);
+}
+
+.base{
+  position:absolute;
+  inset:0;
+  background:#1b1024;
+  border-radius:6px;
+}
+
+.pliegue{
+  position:absolute;
+  width:0;
+  height:0;
+  border-style:solid;
+}
+
+.arriba{
+  top:0; left:0;
+  border-width:80px 120px 0 120px;
+  border-color:#3b1c4a transparent transparent transparent;
+  transform-origin:top;
+  transition:transform 1s ease;
+  z-index:4;
+}
+
+.abajo{
+  bottom:0; left:0;
+  border-width:0 120px 80px 120px;
+  border-color:transparent transparent #2a1236 transparent;
+}
+
+.izq{
+  border-width:80px 0 80px 120px;
+  border-color:transparent transparent transparent #24102f;
+}
+
+.der{
+  right:0;
+  border-width:80px 120px 80px 0;
+  border-color:transparent #24102f transparent transparent;
+}
+
+/* ================== CORAZÓN CARTA ================== */
+.corazon{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:34px;
+  z-index:5;
+  animation:latido 1.3s infinite;
+}
+
+@keyframes latido{
+  50%{transform:translate(-50%,-50%) scale(1.2);}
+}
+
+@keyframes latido-centro{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.15);}
+}
+
+
+/* ================== PAPEL ================== */
+.papel{
+  position:absolute;
+  width:300px;
+  height:200px;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background:linear-gradient(145deg,#12081a,#1f0f2b);
+  border-radius:14px;
+  box-shadow:0 20px 50px rgba(180,90,255,.45);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:30px;
+  opacity:0;
+  transition:transform 1.6s ease, opacity 1.6s ease;
+  z-index:2;
+}
+
+.papel.mostrar{
+  opacity:1;
+  transform:translate(-50%,-180px);
+  z-index:6;
+}
+
+/* ================== CAÍDA SOBRE ================== */
+.caer{
+  animation:caida 2s forwards;
+}
+
+@keyframes caida{
+  to{
+    transform:translateY(400px);
+    opacity:0;
+  }
+}
+
+/* ================== CONFETTI ================== */
+.confetti{
+  position:fixed;
+  top:-10px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  animation:confetti 4s linear forwards;
+}
+
+@keyframes confetti{
+  to{
+    transform:translateY(100vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+/* ================== BRILLITOS ================== */
+.sparkle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:#d38cff;
+  border-radius:50%;
+  animation:twinkle 2s infinite;
+}
+
+@keyframes twinkle{
+  50%{opacity:.2;}
+}
+
+/* ================== CONTADOR SECRETO ================== */
+.contador{
+  position:fixed;
+  bottom:40px;
+  right:40px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 1s ease;
+  z-index:20;
+}
+
+.contador.visible{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.heart-secret{
+  font-size:38px;
+  cursor:pointer;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:latido-centro 1.3s infinite;
+  transform-origin:center;
+}
+
+
+.texto-clicks{
+  font-style:italic;
+  font-size:14px;
+  margin-top:6px;
+  transition:transform .4s ease, opacity .4s ease;
+}
+
+.explotar{
+  animation:boom .8s forwards;
+}
+
+@keyframes boom{
+  to{transform:scale(2);opacity:0;}
+}
+
+.secreto{
+  position:absolute;
+  opacity:0;
+  visibility:hidden;
+  font-size:22px;
+  font-style:italic;
+  z-index:30;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:scale(.9);}
+  to{opacity:1;transform:scale(1);}
+}
+
+
+.mensaje-final{
+  position:fixed;
+  inset:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  
+  padding:80px;              /* separa del borde */
+box-sizing:border-box;
+
+max-width:900px;           /* ancho cómodo */
+margin:auto;               /* centra horizontal */
+
+  font-size:22px;
+  font-style:italic;
+  letter-spacing:1.5px;
+  color:#f2c6ff;
+  text-align:center;
+  line-height:1.5;
+  opacity:0;
+  pointer-events:none;
+  text-shadow:0 0 30px rgba(210,140,255,.6);
+  z-index:60;
+}
+
+
+.mensaje-final.mostrar{
+  opacity:1;
+  animation:mensajeFade 2.5s ease forwards;
+}
+
+.mensaje-final.mostrar{
+  opacity:1;
+}
+
+@keyframes mensajeFade{
+  from{
+    opacity:0;
+    transform:scale(.9);
+  }
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+/* ================== DECORACIONES GIF ================== */
+.decoracion{
+  position:fixed;
+  width:140px;
+  opacity:0;
+  pointer-events:none;
+  z-index:10;
+  filter:drop-shadow(0 0 25px rgba(210,140,255,.4));
+  transition:opacity 1.8s ease, transform 1.8s ease;
+  transform:scale(0.9);
+}
+
+.decoracion.mostrar{
+  opacity:0.9;
+  transform:scale(1);
+}
+
+
+/* posiciones */
+.decoracion.izquierda{
+  left:40px;
+  bottom:120px;
+}
+
+.decoracion.derecha{
+  right:40px;
+  bottom:120px;
+}
+
+.decoracion.arriba-izq{
+  left:60px;
+  top:60px;
+}
+
+.decoracion.arriba-der{
+  right:60px;
+  top:60px;
+}
+
+@keyframes flotar{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+}
+.decoracion{
+  animation:flotar 6s ease-in-out infinite;
+}
+
+.borde-2000s{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:9999;
+
+  border:28px solid transparent;
+
+  background-image:url("leopard2000s.gif");
+  background-repeat:repeat;
+  background-size:180px;
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;
+
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite:exclude;
+}
+
+
+</style>
+</head>
+
+<body>
+<div class="borde-2000s"></div>
+
+
+<div class="niebla"></div>
+<div class="glow"></div>
+
+<div class="carta" id="carta">
+  <div class="base"></div>
+  <div class="pliegue arriba" id="tapa"></div>
+  <div class="pliegue abajo"></div>
+  <div class="pliegue izq"></div>
+  <div class="pliegue der"></div>
+  <div class="corazon">🖤</div>
+
+  <div class="sparkle" style="top:-5px;left:-5px"></div>
+  <div class="sparkle" style="top:-5px;right:-5px"></div>
+  <div class="sparkle" style="bottom:-5px;left:-5px"></div>
+  <div class="sparkle" style="bottom:-5px;right:-5px"></div>
+</div>
+
+<div class="papel" id="papel">
+  ✨ feliz birthday, Rachel ✨<br><br>
+  let all ur nights kiss u with eternal light
+  <div style="margin-top:15px;font-style:italic;font-size:14px;">
+    — ur friend tobi
+  </div>
+</div>
+
+<div class="contador" id="contador">
+  <div class="heart-secret" id="heart">
+    🖤
+  </div>
+  <div class="texto-clicks" id="textoClicks">(click 19 times)</div>
+</div>
+
+
+
+<audio id="musica" src="Happy Birthday (8-Bit)(MP3_320K).mp3"></audio>
+
+
+<script>
+const carta=document.getElementById("carta");
+const tapa=document.getElementById("tapa");
+const papel=document.getElementById("papel");
+
+const contador=document.getElementById("contador");
+const heart=document.getElementById("heart");
+const crack=document.getElementById("crack");
+const textoClicks=document.getElementById("textoClicks");
+
+const finalTexto=document.getElementById("finalTexto");
+const musica = document.getElementById("musica");
+
+
+let clicks=0;
+const MAX=19;
+
+function lanzarConfetti(cantidad = 60){
+  const colores=["#b88cff","#f2c6ff","#7b4bb7","#d38cff"];
+  for(let i=0;i<cantidad;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colores[Math.floor(Math.random()*colores.length)];
+    c.style.animationDuration=(3+Math.random()*2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+}
+
+
+carta.addEventListener("click",()=>{
+  tapa.style.transform="rotateX(180deg)";
+
+  setTimeout(()=>papel.classList.add("mostrar"),600);
+  setTimeout(()=>carta.classList.add("caer"),2200);
+
+  setTimeout(()=>contador.classList.add("visible"),900);
+
+  const colores=["#b88cff","#f2c6ff","#7b4bb7","#d38cff"];
+  for(let i=0;i<40;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=colores[Math.floor(Math.random()*colores.length)];
+    c.style.animationDuration=(3+Math.random()*2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),5000);
+  }
+},{once:true});
+
+
+
+
+heart.addEventListener("click",()=>{
+  clicks++;
+  textoClicks.textContent = `(click ${MAX - clicks} times)`;
+
+  if(clicks >= MAX){
+
+    // explota el corazón
+    heart.classList.add("explotar");
+    textoClicks.style.opacity = "0";
+
+    // música + confetti final
+    musica.play();
+    lanzarConfetti(120);
+
+    // ocultar contador
+    setTimeout(()=>{
+      contador.style.opacity = "0";
+    },500);
+
+    // desaparecer la carta (POSTA)
+    setTimeout(()=>{
+      carta.classList.add("caer");
+    },600);
+
+    // mostrar mensaje final
+setTimeout(()=>{
+  document.getElementById("mensajeFinal").classList.add("mostrar");
+},1800);
+
+
+    // desaparecer el papel también
+setTimeout(()=>{
+  papel.style.transition = "opacity 1.2s ease, transform 1.2s ease";
+  papel.style.opacity = "0";
+  papel.style.transform = "translate(-50%,-220px) scale(0.95)";
+},600);
+
+// mostrar decoraciones finales
+document.querySelectorAll(".decoracion").forEach(el=>{
+  el.classList.add("mostrar");
+});
+
+
+  }
+});
+
+
+
+
+
+
+
+   
+  
+ if(clicks >= MAX){
+  heart.classList.add("explotar");
+  textoClicks.style.opacity = "0";
+
+  musica.play();          // 🎶 música
+  lanzarConfetti(120);    // 🎉 confetti final
+
+  // desaparecer el contador
+  setTimeout(()=>{
+    contador.style.opacity = "0";
+  },600);
+
+  // desaparecer la carta suavemente
+  setTimeout(()=>{
+    carta.style.transition = "opacity 1.5s ease, transform 1.5s ease";
+    carta.style.opacity = "0";
+    carta.style.transform = "scale(0.9)";
+  },700);
+
+  // mostrar texto secreto
+ 
+}
+
+;
+</script>
+
+<div class="mensaje-final" id="mensajeFinal">
+  "rachel, youre one of the most important persons that i have ever met in my life
+you are very important to me, even tho we met on roblox 🤑, i wish you always the good and especially in your especial day. remember that you are one of the coolest and smart persons in the planet and i think that is all i wish i can write something more but im sleepy because i stayed up all night, okay whatever, make sure to enjoy your day and not die pls cause i need an philosophy and english teacher
+"
+</div>
+
+<img src="owl.gif" class="decoracion izquierda">
+<img src="spider.gif" class="decoracion derecha">
+<img src="sparkles.gif" class="decoracion arriba-izq">
+<img src="bats.gif" class="decoracion arriba-der">
+
+</body>
+</html>
+
